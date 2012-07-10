@@ -1,7 +1,12 @@
 #include "urlParser.h" //include the declaration for this class
  
 String urlHeader = "";
-String fullHeader = "";
+//String fullHeader = "";
+//unsigned char urlHeader[64];
+//unsigned char tempHeader[128];
+String tempHeader;
+//int tempHeaderSize = 0;
+//int urlHeaderSize = 0;
 String paths[8];
 int numPaths;
 //String fullPathReq = "";
@@ -9,7 +14,9 @@ int numPaths;
 //<<constructor>> setup the LED, make pin 13 an OUTPUT
 urlParser::urlParser(){
 	urlHeader = "";
-	fullHeader ="";
+	//fullHeader ="";
+	tempHeader = "";
+	//headerSize = 0;
 	//fullPathReq = "";
 	numPaths =0;
 	
@@ -22,8 +29,8 @@ urlParser::urlParser(){
  
 //<<destructor>>
 urlParser::~urlParser(){
-	urlHeader = "";
-	fullHeader ="";
+	//urlHeader = "";
+	//fullHeader ="";
 	//fullPathReq = "";
 	
 	
@@ -32,6 +39,7 @@ urlParser::~urlParser(){
 		paths[i] = "";
 	
 	}
+
 
 }
  
@@ -46,13 +54,42 @@ void urlParser::setURLHeader(String initString){
         urlHeader = initString;
 }
 
-void urlParser::appendHeader(char newChar){
-        fullHeader += newChar;
+void urlParser::appendHeader(char tempC){
+    tempHeader += tempC;
+	
+		if (tempC == '\n') {
+          if(tempHeader.indexOf("GET ")==0){
+
+            urlHeader = tempHeader;
+            //Serial.println("-------about to parse IN LIBRARY------");
+			//Serial.println("get Request is:");
+			
+            //Serial.println(urlHeader);
+            
+          
+            //Serial.println("parsed get request is:");
+			parseURLHeader();
+			//Serial.println(fullPathReq);
+			//Serial.println("-------Parsed in LIBRARY------");
+
+          }   
+          tempHeader = "";
+        }
+		
+		
+		
+		
+		
 }
 
 void urlParser::parseHeaders(){
+	
 	/*extracts full header string (fullHeader) into the urlHeader file
+	Depricated i believe
+	
 	*/
+	
+	/*
 	
 	String readString = "";
 	char tempC;
@@ -81,16 +118,11 @@ void urlParser::parseHeaders(){
         }
 		
 		
-		
-		
-		
-		
-		
 	
 	}
 	//Serial.println(readString);
 	
-
+	*/
         
 }
 
@@ -101,8 +133,8 @@ String urlParser::parseURLHeader(){
 
 
  // Serial.println(""); 
- String getString;
- getString = urlHeader;
+ //String getString;
+ //getString = urlHeader;
  // Serial.println("begin parse function");
  
  int space1;
@@ -112,11 +144,11 @@ String urlParser::parseURLHeader(){
  //Serial.println("getString = ");
  //Serial.println(getString);
 
- space1 = getString.indexOf("GET ");
+ space1 = urlHeader.indexOf("GET ");
 
  //Serial.print("Space1 = ");
  //Serial.println(space1);
- temp = getString.substring(space1 + 4,getString.length()); 
+ temp = urlHeader.substring(space1 + 4,urlHeader.length()); 
   //Serial.print("temp.1 = ");
   //Serial.println(temp);
 
